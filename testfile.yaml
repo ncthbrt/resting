@@ -1,0 +1,52 @@
+- description: It should do xyz
+  url: https://google.com  
+  method: POST
+  headers:
+    - "Cache-Control": "max-age=0"
+  auth: 
+    - user: "sdsd"
+    - password: "12345678"
+  body: {
+      "a": "hello",
+      "b": "goodbye"
+    }
+  expect:
+    statusCode: 200
+    body: {
+        "id": 123456789,
+        "a": "hello",
+        "b": "goodbye"
+      }
+    headers:
+  assert: |-
+    const a = new things
+    console.log(a);
+  post:
+- description: It should do xyz
+  url: https://google.com
+  method: POST
+  headers:
+    - "Cache-Control": "max-age=0"
+  auth: 
+    - user: "sdsd"
+    - password: "12345678"
+  body: {
+      "id": "{{requestA}}",
+      "a": "hello",
+      "b": "goodbye"
+    }
+  expect:
+    statusCode: 200
+    body: {
+        "id": 123456789,
+        "a": "hello",
+        "b": "goodbye"
+      }      
+  assertions: |-
+    const a = new things
+    console.log(a);  
+  post-request:
+  pre-request:
+
+    
+

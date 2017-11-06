@@ -21,7 +21,7 @@
     "bs-json"    
   ],
   "bs-dev-dependencies": [
-    "bs-jest"    
+    "bs-jest"
   ],
   "namespace": true
 }

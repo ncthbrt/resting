@@ -4,14 +4,11 @@ type yamlSafeLoad = (string, unit) => Js.Json.t;
 
 [@bs.module "js-yaml"] external safeLoad : yamlSafeLoad = "safeLoad";
 
-let value = safeLoad("test: 123", ());
+let data = {| {
+  "start": { "x": 1.1, "y": -0.4 },
+  "end":   { "x": 5.3, "y": 3.8 }
+} |};
 
-let a: array(string) =
-  switch (Js.Json.decodeObject(value)) {
-  | Some(obj) => Js.Dict.keys(obj)
-  | None => [||]
-  };
+let line = data |> Js.Json.parseExn |> Decode.line;
 
-a |> Js.log;
-
-Js.log(Js.Json.stringify(value));
+Printf.printf("%f\n", line.start.x);

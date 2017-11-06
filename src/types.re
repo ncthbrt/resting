@@ -40,7 +40,30 @@ type testCase = {
   postRequest: option(string)
 };
 
-type testSchema = {
+type testSuite = {
   testCases: list(testCase),
   environmentVariables
+};
+
+module Decode = {
+  let method = (json) => Get;
+  let headers = (json) => [];
+  let testCase = (json) =>
+    Json.Decode.{
+      description: json |> field("description", string),
+      method: json |> field("method", method),
+      url: json |> field("description", string),
+      headers: json |> field("headers", headers),
+      auth: None,
+      expect: None,
+      assertions: None,
+      preRequest: None,
+      postRequest: None
+    };
+  let environmentVariables = (json) => Json.Decode.{};
+  let testSuite = (json) =>
+    Json.Decode.{
+      testCases: json |> array("testCase", testCase) |> list,
+      environmentVariables: json |> dict("environmentVariables", string) |> Map
+    };
 };

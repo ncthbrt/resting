@@ -20,8 +20,7 @@
     headers:
   assert: |-
     const a = new things
-    console.log(a);
-  post:
+    console.log(a);  
 - description: It should do xyz
   url: https://google.com
   method: POST

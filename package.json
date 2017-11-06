@@ -18,6 +18,7 @@
     "jest": "^21.2.1"
   },
   "dependencies": {
+    "bs-json": "^0.2.4",
     "js-yaml": "^3.10.0"
   }
 }

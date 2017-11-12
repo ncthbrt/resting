@@ -1,4 +1,4 @@
-open Types;
+/* open Types;
 
 type yamlSafeLoad = (string, unit) => Js.Json.t;
 
@@ -11,4 +11,4 @@ let data = {| {
 
 let line = data |> Js.Json.parseExn |> Decode.line;
 
-Printf.printf("%f\n", line.start.x);
+Printf.printf("%f\n", line.start.x); */

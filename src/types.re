@@ -12,8 +12,7 @@ type auth = {
   password: option(string)
 };
 
-type environmentVariables =
-  | Map(string, string);
+type environmentVariables = list((string, string));
 
 type httpResponseCode =
   | Ok
@@ -27,6 +26,7 @@ type expect = {
 type assertions = string;
 
 type header = (string, string);
+
 
 type testCase = {
   description: string,
@@ -45,6 +45,7 @@ type testSuite = {
   environmentVariables
 };
 
+
 module Decode = {
   let method = (json) => Get;
   let headers = (json) => [];
@@ -60,10 +61,25 @@ module Decode = {
       preRequest: None,
       postRequest: None
     };
-  let environmentVariables = (json) => Json.Decode.{};
+    
+  let dictToArray: Js.Dict.t(string) => (list((string,string)), string) => list((string,string))  = (dict) => (prev, key: string) => [(key, Js.Dict.unsafeGet(dict,key) :> string), ...prev];
+  let environmentVariables: (Js.Json.t => list((string,string))) = (json) => 
+    json 
+    |> Json.Decode.dict(Json.Decode.string) 
+    |> (d => Js.Dict.keys(d) |> Js.Array.reduce(dictToArray(d), []));  
+  
+  let testCases = json => json |> Json.Decode.list(testCase);
   let testSuite = (json) =>
     Json.Decode.{
-      testCases: json |> array("testCase", testCase) |> list,
-      environmentVariables: json |> dict("environmentVariables", string) |> Map
+      testCases: json |> field("testCases", list(testCase)),
+      environmentVariables: json |> field("environmentVariables", environmentVariables)
     };
 };
+
+type yamlSafeLoad = (string, unit) => Js.Json.t;
+
+[@bs.module "js-yaml"] external safeLoad : yamlSafeLoad = "safeLoad";
+let file = Node.Fs.readFileAsUtf8Sync("testfile.yaml");
+
+let result = safeLoad(file, ()) |> Decode.testCases;
+Js.log(List.hd(result).description);

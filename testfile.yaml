@@ -17,7 +17,8 @@
         "a": "hello",
         "b": "goodbye"
       }
-    headers:
+    headers:  
+      - "Cache-Control": "max-age=0"
   assert: |-
     const a = new things
     console.log(a);  

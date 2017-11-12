@@ -7,12 +7,24 @@ var Curry       = require("bs-platform/lib/js/curry.js");
 var JsYaml      = require("js-yaml");
 var Json_decode = require("bs-json/src/Json_decode.js");
 
+function dictToArray(dict) {
+  return Object.keys(dict).reduce((function (prev, key) {
+                return /* :: */[
+                        /* tuple */[
+                          key,
+                          dict[key]
+                        ],
+                        prev
+                      ];
+              }), /* [] */0);
+}
+
 function method_() {
   return /* Get */0;
 }
 
-function headers() {
-  return /* [] */0;
+function headers(json) {
+  return dictToArray(Json_decode.dict(Json_decode.string, json));
 }
 
 function testCase(json) {
@@ -29,21 +41,8 @@ function testCase(json) {
         ];
 }
 
-function dictToArray(dict, prev, key) {
-  return /* :: */[
-          /* tuple */[
-            key,
-            dict[key]
-          ],
-          prev
-        ];
-}
-
 function environmentVariables(json) {
-  var d = Json_decode.dict(Json_decode.string, json);
-  return Object.keys(d).reduce((function (param, param$1) {
-                return dictToArray(d, param, param$1);
-              }), /* [] */0);
+  return dictToArray(Json_decode.dict(Json_decode.string, json));
 }
 
 function testCases(json) {
@@ -60,10 +59,10 @@ function testSuite(json) {
 }
 
 var Decode = /* module */[
+  /* dictToArray */dictToArray,
   /* method_ */method_,
   /* headers */headers,
   /* testCase */testCase,
-  /* dictToArray */dictToArray,
   /* environmentVariables */environmentVariables,
   /* testCases */testCases,
   /* testSuite */testSuite

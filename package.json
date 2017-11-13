@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "bs-json": "^0.2.4",
+    "immutable-re": "^0.0.15",
     "js-yaml": "^3.10.0"
   }
 }

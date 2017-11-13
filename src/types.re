@@ -44,39 +44,48 @@ type testSuite = {
   environmentVariables
 };
 
+exception UnknownHttpMethod(string);
+
 module Decode = {
+
   let dictToArray: Js.Dict.t(string) => list((string, string)) =
-    (dict) =>
-      dict
-      |> Js.Dict.keys
-      |> Js.Array.reduce(
-           (prev, key: string) => [(key, (Js.Dict.unsafeGet(dict, key) :> string)), ...prev],
-           []
-         );
-  let method = (json) => Get;
+    (dict) => dict |> Js.Dict.entries |> Array.to_list;         
+
+  let method = (json) => json |> Json.Decode.string |> String.uppercase |> x => switch(x) {
+    | "GET" => Get
+    | "POST" => Post        
+    | "PATCH" => Patch
+    | "PUT" => Put
+    | "DELETE" => Delete
+    | "HEAD" => Head
+    | "OPTIONS" => Options
+    | method => raise(UnknownHttpMethod(method))
+  };
+
+  let header: Js.Json.t => header = (json) =>
+      json |> Json.Decode.dict(Json.Decode.string) |> Js.Dict.entries |> Array.to_list |> List.hd;
+  
+
   let headers: Js.Json.t => list(header) =
-    (json) => json |> Json.Decode.array(Json.Decode.dict(Json.Decode.string));
+    (json) => json |> Json.Decode.list(header);
 
   let testCase = (json) =>
     Json.Decode.{
       description: json |> field("description", string),
       method: json |> field("method", method),
-      url: json |> field("description", string),
+      url: json |> field("url", string),
       headers: json |> field("headers", headers),
       auth: None,
       expect: None,
-      assertions: None,
-      preRequest: None,
-      postRequest: None
+      assertions: json |> optional(field("assertions", string)),
+      preRequest: json |> optional(field("pre-request", string)),
+      postRequest: json |> optional(field("post-request", string))
     };
+
   let environmentVariables: Js.Json.t => list((string, string)) =
     (json) => json |> Json.Decode.dict(Json.Decode.string) |> dictToArray;
   let testCases = (json) => json |> Json.Decode.list(testCase);
-  let testSuite = (json) =>
-    Json.Decode.{
-      testCases: json |> field("testCases", list(testCase)),
-      environmentVariables: json |> field("environmentVariables", environmentVariables)
-    };
+
 };
 
 type yamlSafeLoad = (string, unit) => Js.Json.t;

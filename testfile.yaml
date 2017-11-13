@@ -2,10 +2,10 @@
   url: https://google.com  
   method: POST
   headers:
-    - "Cache-Control": "max-age=0"
+    "Cache-Control": "max-age=0"
   auth: 
-    - user: "sdsd"
-    - password: "12345678"
+    user: "sdsd"
+    password: "12345678"
   body: {
       "a": "hello",
       "b": "goodbye"
@@ -18,7 +18,7 @@
         "b": "goodbye"
       }
     headers:  
-      - "Cache-Control": "max-age=0"
+      "Cache-Control": "max-age=0"
   assert: |-
     const a = new things
     console.log(a);  
@@ -26,15 +26,15 @@
   url: https://google.com
   method: POST
   headers:
-    - "Cache-Control": "max-age=0"
+    "Cache-Control": "max-age=0"
   auth: 
-    - user: "sdsd"
-    - password: "12345678"
+    user: "sdsd"
+    password: "12345678"
   body: {
-      "id": "{{requestA}}",
-      "a": "hello",
-      "b": "goodbye"
-    }
+    "id": "{{requestA}}",
+    "a": "hello",
+    "b": "goodbye"
+  }
   expect:
     statusCode: 200
     body: {

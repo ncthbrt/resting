@@ -3,7 +3,23 @@
 
 var Caml_exceptions = require("bs-platform/lib/js/caml_exceptions.js");
 
-var UnknownHttpMethod = Caml_exceptions.create("TestSuite-Testingbug.UnknownHttpMethod");
+var InvalidResponseCode = Caml_exceptions.create("TestSuite-Resting.InvalidResponseCode");
 
-exports.UnknownHttpMethod = UnknownHttpMethod;
+function createStatusCode(code) {
+  var match = +(code >= 200 && code <= 500);
+  if (match !== 0) {
+    return /* HttpStatusCode */[code];
+  } else {
+    throw [
+          InvalidResponseCode,
+          code
+        ];
+  }
+}
+
+var UnknownHttpMethod = Caml_exceptions.create("TestSuite-Resting.UnknownHttpMethod");
+
+exports.InvalidResponseCode = InvalidResponseCode;
+exports.createStatusCode    = createStatusCode;
+exports.UnknownHttpMethod   = UnknownHttpMethod;
 /* No side effect */

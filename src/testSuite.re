@@ -14,19 +14,25 @@ type auth = {
 
 type environmentVariables = list((string, string));
 
-type httpResponseCode =
-  | Ok
-  | Created;
+type httpStatusCode = 
+  | HttpStatusCode(int);
 
+exception InvalidResponseCode(int);
+
+let createStatusCode = (code:int) => 
+  code >= 200 && code <= 500
+  ? HttpStatusCode(code)
+  : raise(InvalidResponseCode(code));  
+  
 type header = (string, string);
 
 type expect = {
   body: option(Js.Json.t),
-  responseCode: option(httpResponseCode),
+  statusCode: option(httpStatusCode),
   headers: list(header)
 };
 
-type assertions = string;
+type assertion = string;
 
 type testCase = {
   description: string,
@@ -35,7 +41,7 @@ type testCase = {
   auth: option(auth),
   headers: list(header),
   expect: option(expect),
-  assertions: option(assertions),
+  assertions: option(list(assertion)),
   preRequest: option(string),
   postRequest: option(string)
 };

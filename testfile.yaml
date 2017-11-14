@@ -18,10 +18,7 @@
         "b": "goodbye"
       }
     headers:  
-      "Cache-Control": "max-age=0"
-  assert: |-
-    const a = new things
-    console.log(a);  
+      "Cache-Control": "max-age=0"  
 - description: It should do xyz
   url: https://google.com
   method: POST
@@ -42,9 +39,8 @@
         "a": "hello",
         "b": "goodbye"
       }      
-  assertions: |-
-    const a = new things
-    console.log(a);  
+  assertions: 
+    - (req,res,env) => false
   post-request:
   pre-request:
 

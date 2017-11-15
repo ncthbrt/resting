@@ -27,7 +27,7 @@ let auth = (json) =>
   };
 
 let statusCode = (json) => 
-  json |> Json.Decode.int |> createStatusCode;
+  json |> Json.Decode.int |> TestSuite.HttpResponseCode.create;
 
 let expect = (json) => Json.Decode.{
     body: json |> optional(field("body", x => x)),
@@ -65,5 +65,5 @@ let result = safeLoad(file, ()) |> testCases;
 
 Js.log(switch(List.hd(result).expect){
   | Some(v) => v.statusCode
-  | None => Some(createStatusCode(200))
+  | None => Some(TestSuite.HttpResponseCode.create(200))
 });

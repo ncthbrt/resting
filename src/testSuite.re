@@ -14,16 +14,30 @@ type auth = {
 
 type environmentVariables = list((string, string));
 
-type httpStatusCode = 
-  | HttpStatusCode(int);
+module HttpResponseCode : {
+  type httpResponseCode = pri HttpResponseCode(int);
+  exception InvalidResponseCode(int);
+  let tryCreate: int => option(httpResponseCode);
+  let create: int => httpResponseCode;
+} = {
+  exception InvalidResponseCode(int);
 
-exception InvalidResponseCode(int);
+  type httpResponseCode = HttpResponseCode(int);
 
-let createStatusCode = (code:int) => 
-  code >= 200 && code <= 500
-  ? HttpStatusCode(code)
-  : raise(InvalidResponseCode(code));  
+  let tryCreate = code => 
+      code >=100 && code<=500
+      ? Some(HttpResponseCode(code))
+      : None;
   
+  let create = code => 
+     (code >= 100 && code<=500) 
+      ? HttpResponseCode(code)
+      : raise(InvalidResponseCode(code));
+};
+
+type httpStatusCode = HttpResponseCode.httpResponseCode;
+
+
 type header = (string, string);
 
 type expect = {

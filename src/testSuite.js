@@ -3,12 +3,21 @@
 
 var Caml_exceptions = require("bs-platform/lib/js/caml_exceptions.js");
 
-var InvalidResponseCode = Caml_exceptions.create("TestSuite-Resting.InvalidResponseCode");
+var InvalidResponseCode = Caml_exceptions.create("TestSuite-Resting.HttpResponseCode.InvalidResponseCode");
 
-function createStatusCode(code) {
-  var match = +(code >= 200 && code <= 500);
+function tryCreate(code) {
+  var match = +(code >= 100 && code <= 500);
   if (match !== 0) {
-    return /* HttpStatusCode */[code];
+    return /* Some */[/* HttpResponseCode */[code]];
+  } else {
+    return /* None */0;
+  }
+}
+
+function create(code) {
+  var match = +(code >= 100 && code <= 500);
+  if (match !== 0) {
+    return /* HttpResponseCode */[code];
   } else {
     throw [
           InvalidResponseCode,
@@ -17,9 +26,14 @@ function createStatusCode(code) {
   }
 }
 
+var HttpResponseCode = /* module */[
+  /* InvalidResponseCode */InvalidResponseCode,
+  /* tryCreate */tryCreate,
+  /* create */create
+];
+
 var UnknownHttpMethod = Caml_exceptions.create("TestSuite-Resting.UnknownHttpMethod");
 
-exports.InvalidResponseCode = InvalidResponseCode;
-exports.createStatusCode    = createStatusCode;
-exports.UnknownHttpMethod   = UnknownHttpMethod;
+exports.HttpResponseCode  = HttpResponseCode;
+exports.UnknownHttpMethod = UnknownHttpMethod;
 /* No side effect */

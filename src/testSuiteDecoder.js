@@ -52,7 +52,7 @@ function auth(json) {
 }
 
 function statusCode(json) {
-  return TestSuite$Resting.createStatusCode(Json_decode.$$int(json));
+  return TestSuite$Resting.HttpResponseCode[/* create */2](Json_decode.$$int(json));
 }
 
 function expect(json) {
@@ -118,7 +118,7 @@ var result = testCases(Curry._2(JsYaml.safeLoad, file, /* () */0));
 
 var match = List.hd(result)[/* expect */5];
 
-console.log(match ? match[0][/* statusCode */1] : /* Some */[TestSuite$Resting.createStatusCode(200)]);
+console.log(match ? match[0][/* statusCode */1] : /* Some */[TestSuite$Resting.HttpResponseCode[/* create */2](200)]);
 
 exports.dictToList           = dictToList;
 exports.method_              = method_;
